@@ -1,6 +1,6 @@
 # sha2
 
-[![Continuous integration](https://github.com/Michael-F-Bryan/sha2/workflows/Continuous%20Integration/badge.svg?branch=main)](https://github.com/Michael-F-Bryan/sha2/actions)
+[![Continuous integration](https://github.com/wasmerio/sha2/workflows/Continuous%20Integration/badge.svg?branch=main)](https://github.com/wasmerio/sha2/actions)
 
 ([API Docs][api-docs])
 
@@ -30,5 +30,5 @@ conditions.
 The intent of this crate is to be free of soundness bugs. The developers will
 do their best to avoid them, and welcome help in analysing and fixing them.
 
-[api-docs]: https://michael-f-bryan.github.io/sha2
+[api-docs]: https://wasmerio.github.io/sha2
 [crev]: https://github.com/crev-dev/cargo-crev

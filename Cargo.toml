@@ -1,9 +1,10 @@
 [package]
 name = "sha2-wasm"
 version = "0.1.0"
-authors = ["Michael-F-Bryan <michaelfbryan@gmail.com>"]
+authors = ["Wasmer Engineering Team <engineering@wasmer.io>"]
+repository = "https://github.com/wasmerio/sha2"
+homepage = "https://wasmer.io/"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/Michael-F-Bryan/sha2.git"
 edition = "2021"
 rust-version = "1.62.1"
 
