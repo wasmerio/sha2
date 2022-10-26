@@ -11,3 +11,6 @@ rust-version = "1.62.1"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+hex-literal = "0.3.4"
+sha2 = "0.10.6"
+wit-bindgen-rust = { git = "https://github.com/wasmerio/wit-bindgen", version = "0.1.0" }

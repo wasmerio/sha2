@@ -1,0 +1,5 @@
+/// Takes a list of bytes and calculates the SHA256 hash of it.
+sha256: func(bytes: list<u8>) -> list<u8>
+
+/// Takes a list of bytes and calculates the SHA512 hash of it.
+sha512: func(bytes: list<u8>) -> list<u8>
