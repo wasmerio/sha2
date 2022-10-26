@@ -3,6 +3,7 @@
 version = 3
 
 [[package]]
+<<<<<<< HEAD
 name = "anyhow"
 version = "1.0.66"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -295,3 +296,7 @@ dependencies = [
  "unicode-normalization",
  "unicode-xid",
 ]
+=======
+name = "sha2-wasm"
+version = "0.1.0"
+>>>>>>> 806d53d7f7fe1084d001ba0ac3a326c5cde1f116
