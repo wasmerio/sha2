@@ -1,7 +1,27 @@
+use std::sync::Mutex;
+use wit_bindgen_rust::Handle;
+
 use ::sha2::{Digest, Sha256, Sha512};
 
 wit_bindgen_rust::export!("sha2.wit");
 
+pub struct Sha256varcore(Mutex<Vec<u8>>);
+
+impl sha2::Sha256varcore for Sha256varcore {
+    fn new() -> Handle<Sha256varcore> {
+        Handle::new(Sha256varcore(Mutex::new(vec![])))
+    }
+    fn update(&self, bytes: Vec<u8>) {
+        let mut self_bytes = &mut *self.0.lock().unwrap();
+        bytes.iter().for_each(|val| {
+            self_bytes.push(*val);
+        });
+    }
+    fn finalize(&self) -> Vec<u8> {
+        let temp_vec = *self.0.lock().unwrap().clone().to_vec();
+        // sha2::Sha2::sha256(*self.0.lock().unwrap().clone().to_vec())
+    }
+}
 struct Sha2;
 
 impl sha2::Sha2 for Sha2 {
@@ -27,6 +47,9 @@ mod tests {
     fn sha256_string_as_bytes() {
         let sample_string = "hello world";
         let result = Sha2::sha256(sample_string.as_bytes().to_vec());
+
+        let mut hasher = Sha256::new();
+
         assert_eq!(
             result,
             hex!(
