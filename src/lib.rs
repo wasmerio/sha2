@@ -5,21 +5,19 @@ use ::sha2::{Digest, Sha256, Sha512};
 
 wit_bindgen_rust::export!("sha2.wit");
 
-pub struct Sha256varcore(Mutex<Vec<u8>>);
+pub struct Hasher(Mutex<Sha256>);
 
-impl sha2::Sha256varcore for Sha256varcore {
-    fn new() -> Handle<Sha256varcore> {
-        Handle::new(Sha256varcore(Mutex::new(vec![])))
+impl sha2::Hasher for Hasher {
+    fn sha256() -> Handle<Hasher> {
+        Handle::new(Hasher(Mutex::new(Sha256::new())))
     }
     fn update(&self, bytes: Vec<u8>) {
-        let mut self_bytes = &mut *self.0.lock().unwrap();
-        bytes.iter().for_each(|val| {
-            self_bytes.push(*val);
-        });
+        let mut hasher = self.0.lock().expect("The Mutex was poisoned");
+        hasher.update(bytes);
     }
     fn finalize(&self) -> Vec<u8> {
-        let temp_vec = *self.0.lock().unwrap().clone().to_vec();
-        // sha2::Sha2::sha256(*self.0.lock().unwrap().clone().to_vec())
+        let hasher = self.0.lock().expect("The Mutex was poisoned");
+        hasher.clone().finalize().to_vec()
     }
 }
 struct Sha2;
