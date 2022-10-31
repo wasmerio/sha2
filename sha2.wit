@@ -3,3 +3,10 @@ sha256: func(bytes: list<u8>) -> list<u8>
 
 /// Takes a list of bytes, calculate the SHA512 hash of it and return 128 byte array.
 sha512: func(bytes: list<u8>) -> list<u8>
+
+resource hasher {
+    static sha256: func() -> hasher
+    // static sha512: func() -> hasher
+    update: func(bytes: list<u8>)
+    finalize: func() -> list<u8>
+}

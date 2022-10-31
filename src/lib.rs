@@ -1,7 +1,31 @@
+use std::sync::Mutex;
+use wit_bindgen_rust::Handle;
+
 use ::sha2::{Digest, Sha256, Sha512};
 
 wit_bindgen_rust::export!("sha2.wit");
 
+pub struct Hasher(Mutex<Sha256>);
+
+impl Hasher {
+    fn new(state: Sha256) -> Self {
+        Hasher(Mutex::new(state))
+    }
+}
+
+impl sha2::Hasher for Hasher {
+    fn sha256() -> Handle<Hasher> {
+        Handle::new(Hasher::new(Sha256::default()))
+    }
+    fn update(&self, bytes: Vec<u8>) {
+        let mut hasher = self.0.lock().expect("The Mutex was poisoned");
+        hasher.update(bytes);
+    }
+    fn finalize(&self) -> Vec<u8> {
+        let hasher = self.0.lock().expect("The Mutex was poisoned");
+        hasher.clone().finalize().to_vec()
+    }
+}
 struct Sha2;
 
 impl sha2::Sha2 for Sha2 {
@@ -19,7 +43,9 @@ impl sha2::Sha2 for Sha2 {
 
 #[cfg(test)]
 mod tests {
+
     use super::*;
+    use crate::sha2::Hasher as _;
     use crate::sha2::Sha2 as _;
     use hex_literal::hex;
 
@@ -53,6 +79,26 @@ mod tests {
             ),
             "The SHA512 hash did not match the sample string {:?}",
             sample_string
+        );
+    }
+
+    #[test]
+    fn sha256_hasher() {
+        let hasher = Hasher::new(Sha256::new());
+        hasher.update("hello".into());
+        hasher.update(" ".into());
+        hasher.update("world".into());
+
+        let result = hasher.finalize();
+
+        assert_eq!(
+            result,
+            hex!(
+                "
+            b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
+        "
+            ),
+            "The SHA256 hash did not match the sample string, hello world",
         );
     }
 }
