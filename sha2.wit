@@ -6,7 +6,7 @@ sha512: func(bytes: list<u8>) -> list<u8>
 
 resource hasher {
     static sha256: func() -> hasher
-    // static sha512: func() -> hasher
+    static sha512: func() -> hasher
     update: func(bytes: list<u8>)
     finalize: func() -> list<u8>
 }
