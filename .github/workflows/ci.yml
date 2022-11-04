@@ -29,6 +29,8 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Setup Wasmer
+        uses: wasmerio/setup-wasmer@v1
       - name: Type Checking
         uses: actions-rs/cargo@v1
         with:
