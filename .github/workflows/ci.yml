@@ -31,6 +31,8 @@ jobs:
           override: true
       - name: Setup Wasmer
         uses: wasmerio/setup-wasmer@v1
+      - name: Publish to WAPM
+        uses: wasmerio/wapm-publish@v1
       - name: Type Checking
         uses: actions-rs/cargo@v1
         with:
