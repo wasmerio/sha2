@@ -20,7 +20,7 @@ fn compile_webc_container() {
     let temp_dir = tempdir().unwrap();
 
     let project_dir_path = Path::new(env!("CARGO_MANIFEST_DIR"));
-    // let wapm_dir = project_dir.join("target/wapm/sha2-wasm");
+    let wapm_dir = project_dir_path.join("target/wapm/sha2-wasm");
 
     // let mut wapm_dir_files = vec![];
     // for entry in wapm_dir.read_dir().expect("read_dir call failed") {
@@ -29,19 +29,21 @@ fn compile_webc_container() {
     //     }
     // }
 
-    let tar_gz = File::create("sha2_wasm.tar.gz").unwrap();
+    let tar_gz = File::create(temp_dir.path().join("sha2_wasm.tar.gz")).unwrap();
     let enc = GzEncoder::new(tar_gz, Compression::default());
     let mut tar = tar::Builder::new(enc);
-    tar.append_dir_all("./sha2_wasm", temp_dir.path().display().to_string())
-        .unwrap();
+    tar.append_dir_all("./sha2_wasm", &wapm_dir).unwrap();
     tar.finish().unwrap();
-    // let tar_out = Command::new("tar")
-    //     .current_dir(&wapm_dir)
-    //     .arg("-czvf")
-    //     .arg(temp_dir.path().join("sha2_wasm.tar.gz"))
-    //     .args(wapm_dir_files)
-    //     .output()
-    //     .unwrap_or_else(|e| panic!("failed to execute process: {}", e));
+
+    // for entry in temp_dir
+    //     .path()
+    //     .read_dir()
+    //     .expect("reading temp directory failded")
+    // {
+    //     if let Ok(entry) = entry {
+    //         println!("{:?}", entry.file_name());
+    //     }
+    // }
 
     /*
     let w2p_out = Command::new("wasmer")
