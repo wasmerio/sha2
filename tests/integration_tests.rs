@@ -6,46 +6,35 @@ use flate2::Compression;
 
 mod common;
 
-// check if wasmer is installed.
+// check if wasmer is installed. [done in github actions];
 
 // ./python3 ../../../../../../tests/main.py
 
 #[test]
 fn compile_webc_container() {
-    Command::new("cargo")
+    let wapm_out = Command::new("cargo")
         .args(["wapm", "--dry-run"])
         .output()
         .expect("Failed to execute command");
+
+    assert!(wapm_out.status.success(), "{wapm_out:?}");
 
     let temp_dir = tempdir().unwrap();
 
     let project_dir_path = Path::new(env!("CARGO_MANIFEST_DIR"));
     let wapm_dir = project_dir_path.join("target/wapm/sha2-wasm");
 
-    // let mut wapm_dir_files = vec![];
-    // for entry in wapm_dir.read_dir().expect("read_dir call failed") {
-    //     if let Ok(entry) = entry {
-    //         wapm_dir_files.push(entry.file_name())
-    //     }
-    // }
+    assert!(wapm_dir.exists(), "wapm dir for sha2 not found");
 
+    // Create tar.gz
     let tar_gz = File::create(temp_dir.path().join("sha2_wasm.tar.gz")).unwrap();
     let enc = GzEncoder::new(tar_gz, Compression::default());
     let mut tar = tar::Builder::new(enc);
-    tar.append_dir_all("./sha2_wasm", &wapm_dir).unwrap();
-    tar.finish().unwrap();
+    tar.append_dir_all(".", &wapm_dir).unwrap();
+    let enc = tar.into_inner().unwrap();
+    enc.finish().unwrap();
 
-    // for entry in temp_dir
-    //     .path()
-    //     .read_dir()
-    //     .expect("reading temp directory failded")
-    // {
-    //     if let Ok(entry) = entry {
-    //         println!("{:?}", entry.file_name());
-    //     }
-    // }
-
-    /*
+    // Wasm to pirita convert
     let w2p_out = Command::new("wasmer")
         .current_dir(temp_dir.path())
         .args([
@@ -61,7 +50,9 @@ fn compile_webc_container() {
         .output()
         .expect("wapm2pirita command failed to execute");
 
-    println!("{:?}", w2p_out);
+    assert!(w2p_out.status.success(), "{w2p_out:?}");
+
+    // Wasmer-pack for generating python bindings
     let wasmer_pack_out = Command::new("wasmer")
         .current_dir(temp_dir.path())
         .args([
@@ -78,19 +69,29 @@ fn compile_webc_container() {
         .output()
         .expect("wasmer-pack failed to create python binding");
 
-    println!("{:?}", wasmer_pack_out);
+    assert!(wasmer_pack_out.status.success(), "{wasmer_pack_out:?}");
 
+    // check python sha2 dir
     let python_sha2_dir = temp_dir.path().join("python_sha2");
-
     assert!(python_sha2_dir.exists());
-    Command::new("python3")
+
+    // create python environment
+    let python_env_creation_out = Command::new("python3")
         .current_dir(&python_sha2_dir)
         .args(["-m", "venv", "env"])
         .output()
         .expect("Python environment creation failed");
 
-    let test_dir = project_dir_path.join("tests");
+    assert!(
+        python_env_creation_out.status.success(),
+        "{python_env_creation_out:?}"
+    );
 
+    // create python environment
+    let test_dir = project_dir_path.join("tests");
+    assert!(test_dir.exists(), "Error: No test directory found");
+
+    // install packages in environment using pip
     let pip_out = Command::new("./env/bin/pip")
         .current_dir(&python_sha2_dir)
         .args(["install", ".", "pytest"])
@@ -98,11 +99,13 @@ fn compile_webc_container() {
         .expect("msg");
 
     assert!(pip_out.status.success(), "{pip_out:?}");
-    let py_out = Command::new("./env/bin/pytest")
+
+    // Run the python tests using pytest and record output
+    let pytest_out = Command::new("./env/bin/pytest")
         .current_dir(&python_sha2_dir)
         .arg(test_dir.join("main.py"))
         .output()
         .expect("msg");
-    println!("{py_out:?}");
-    */
+
+    assert!(pytest_out.status.success(), "{pytest_out:?}");
 }
