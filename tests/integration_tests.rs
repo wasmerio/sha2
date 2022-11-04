@@ -31,8 +31,10 @@ fn compile_webc_container() {
     let enc = GzEncoder::new(tar_gz, Compression::default());
     let mut tar = tar::Builder::new(enc);
     tar.append_dir_all(".", &wapm_dir).unwrap();
-    let enc = tar.into_inner().unwrap();
-    enc.finish().unwrap();
+    tar.into_inner()
+        .expect("Unable to finalise the tar archive")
+        .finish()
+        .expect("Unable to finalize the gzip encoder");
 
     // Wasm to pirita convert
     let w2p_out = Command::new("wasmer")
