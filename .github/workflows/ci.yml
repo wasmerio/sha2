@@ -29,10 +29,21 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
       - name: Setup Wasmer
         uses: wasmerio/setup-wasmer@v1
-      - name: Publish to WAPM
-        uses: wasmerio/wapm-publish@v1
+      - name: Install cargo-wapm
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-wapm --verbose --debug
+      # - name: Login to wapm.dev
+      #   run: |
+      #     wapm config set registry.url https://registry.wapm.dev
+      #     wapm login ${{ secrets.WAPM_DEV_TOKEN }}
       - name: Type Checking
         uses: actions-rs/cargo@v1
         with:

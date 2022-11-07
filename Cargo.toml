@@ -18,14 +18,14 @@ bindings = { wit-bindgen = "0.1.0", exports = "sha2.wit" }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-flate2 = "1.0.24"
 sha2 = "0.10.6"
-tar = "0.4.38"
 wit-bindgen-rust = { git = "https://github.com/wasmerio/wit-bindgen", version = "0.1.0" }
 
 [dev-dependencies]
 hex-literal = "0.3.4"
 tempfile = "3.3.0"
+tar = "0.4.38"
+flate2 = "1.0.24"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
