@@ -40,16 +40,6 @@ jobs:
         with:
           command: install
           args: cargo-wapm --verbose --debug
-      - name: Install wasmer-pack
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --git https://github.com/wasmerio/wasmer_pack --verbose --debug
-      - name: Login to wapm.dev
-        run: |
-          wapm config set registry.url https://registry.wapm.dev
-          wapm login ${{ secrets.WAPM_DEV_TOKEN }}
       - name: Type Checking
         uses: actions-rs/cargo@v1
         with:
