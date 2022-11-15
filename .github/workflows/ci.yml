@@ -35,7 +35,9 @@ jobs:
         with:
           python-version: "3.9"
       - name: Setup Wasmer
-        uses: wasmerio/setup-wasmer@v1
+        uses: wasmerio/setup-wasmer@v2
+        with:
+          version: "v3.0.0-rc.2"
       - name: Install cargo-wapm
         uses: actions-rs/cargo@v1
         with:
