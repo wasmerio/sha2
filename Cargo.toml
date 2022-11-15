@@ -13,13 +13,13 @@ rust-version = "1.62.1"
 [package.metadata.wapm]
 namespace = "wasmer"
 abi = "none"
-bindings = { wit-bindgen = "0.1.0", exports = "sha2.wit" }
+bindings = { wit-bindgen = "0.1.0", wit-exports = "sha2.wai" }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 sha2 = "0.10.6"
-wit-bindgen-rust = { git = "https://github.com/wasmerio/wit-bindgen", version = "0.1.0" }
+wai-bindgen-rust = "0.2.0"
 
 [dev-dependencies]
 hex-literal = "0.3.4"
