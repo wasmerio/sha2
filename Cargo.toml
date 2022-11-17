@@ -1,5 +1,6 @@
 [package]
 name = "sha2-wasm"
+description = "Sha2 for wasm, published on WAPM"
 version = "0.1.0"
 authors = ["Wasmer Engineering Team <engineering@wasmer.io>"]
 repository = "https://github.com/wasmerio/sha2"
@@ -8,11 +9,23 @@ license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.62.1"
 
+
+[package.metadata.wapm]
+namespace = "wasmer"
+abi = "none"
+bindings = { wit-bindgen = "0.1.0", wit-exports = "sha2.wai" }
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 sha2 = "0.10.6"
-wit-bindgen-rust = { git = "https://github.com/wasmerio/wit-bindgen", version = "0.1.0" }
+wai-bindgen-rust = "0.2.0"
 
 [dev-dependencies]
 hex-literal = "0.3.4"
+tempfile = "3.3.0"
+tar = "0.4.38"
+flate2 = "1.0.24"
+
+[lib]
+crate-type = ["cdylib", "rlib"]

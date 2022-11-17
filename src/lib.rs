@@ -1,9 +1,9 @@
 use std::sync::Mutex;
-use wit_bindgen_rust::Handle;
+use wai_bindgen_rust::Handle;
 
 use ::sha2::{Digest, Sha256, Sha512};
 
-wit_bindgen_rust::export!("sha2.wit");
+wai_bindgen_rust::export!("sha2.wai");
 
 pub trait Crypt {
     fn update_hash(&mut self, bytes: Vec<u8>);
