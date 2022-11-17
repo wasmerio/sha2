@@ -43,7 +43,7 @@ fn compile_webc_container() {
             "run",
             "wapm2pirita",
             "--mapdir",
-            format!(".:{}", temp_dir.path().display()).as_str(),
+            format!(".::{}", temp_dir.path().display()).as_str(),
             "--",
             "convert",
         ])
@@ -61,7 +61,7 @@ fn compile_webc_container() {
             "run",
             "wasmer-pack",
             "--mapdir",
-            format!("f:{}", temp_dir.path().display()).as_str(),
+            format!("f::{}", temp_dir.path().display()).as_str(),
             "--",
             "python",
             "f/sha2_wasm.webc",
@@ -78,7 +78,7 @@ fn compile_webc_container() {
     assert!(python_sha2_dir.exists());
 
     // create python environment
-    let python_env_creation_out = Command::new("python3")
+    let python_env_creation_out = Command::new("python")
         .current_dir(&python_sha2_dir)
         .args(["-m", "venv", "env"])
         .output()
@@ -93,21 +93,44 @@ fn compile_webc_container() {
     let test_dir = project_dir_path.join("tests");
     assert!(test_dir.exists(), "Error: No test directory found");
 
-    // install packages in environment using pip
-    let pip_out = Command::new("./env/bin/pip")
-        .current_dir(&python_sha2_dir)
-        .args(["install", ".", "pytest"])
-        .output()
-        .expect("msg");
+    if cfg!(target_os = "windows") {
+        let python_sha2_env_dir = python_sha2_dir.join("env").join("Scripts");
+        let pip_out = Command::new(".\\python.exe")
+            .current_dir(&python_sha2_env_dir)
+            .args(["install", ".", "pytest"])
+            .output()
+            .expect("msg");
 
-    assert!(pip_out.status.success(), "{pip_out:?}");
+        assert!(pip_out.status.success(), "{pip_out:?}");
 
-    // Run the python tests using pytest and record output
-    let pytest_out = Command::new("./env/bin/pytest")
-        .current_dir(&python_sha2_dir)
-        .arg(test_dir.join("main.py"))
-        .output()
-        .expect("msg");
+        // Run the python tests using pytest and record output
+        let pytest_out = Command::new("cmd")
+            .current_dir(&python_sha2_env_dir)
+            .args([
+                "/C",
+                format!("{}", python_sha2_env_dir.join("python.exe").display()).as_str(),
+            ])
+            .arg(test_dir.join("main.py"))
+            .output()
+            .expect("msg");
 
-    assert!(pytest_out.status.success(), "{pytest_out:?}");
+        assert!(pytest_out.status.success(), "{pytest_out:?}");
+    } else {
+        let pip_out = Command::new("./env/bin/pip")
+            .current_dir(&python_sha2_dir)
+            .args(["install", ".", "pytest"])
+            .output()
+            .expect("msg");
+
+        assert!(pip_out.status.success(), "{pip_out:?}");
+
+        // Run the python tests using pytest and record output
+        let pytest_out = Command::new("./env/bin/pytest")
+            .current_dir(&python_sha2_dir)
+            .arg(test_dir.join("main.py"))
+            .output()
+            .expect("msg");
+
+        assert!(pytest_out.status.success(), "{pytest_out:?}");
+    }
 }
