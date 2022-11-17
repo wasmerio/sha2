@@ -95,8 +95,14 @@ fn compile_webc_container() {
 
     if cfg!(target_os = "windows") {
         let python_sha2_env_dir = python_sha2_dir.join("env").join("Scripts");
-        let pip_out = Command::new(".\\python.exe")
-            .current_dir(&python_sha2_env_dir)
+
+        // install packages in environment using pip
+        let pip_out = Command::new("cmd")
+            .current_dir(&python_sha2_dir)
+            .args([
+                "/C",
+                format!("{}", python_sha2_env_dir.join("pip.exe").display()).as_str(),
+            ])
             .args(["install", ".", "pytest"])
             .output()
             .expect("msg");
