@@ -1,3 +1,5 @@
 target/
 
 commands.txt
+node_modules/
+generated_bindings/

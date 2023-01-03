@@ -1,0 +1,11 @@
+{
+  "name": "sha2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/wasmerio/sha2.git",
+  "author": "Rudra <aroraru@tcd.ie>",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
