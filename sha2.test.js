@@ -1,8 +1,8 @@
+// const { bindings } = require("@wasmer/sha2-wasm");
 const { bindings } = require("@wasmer/sha2-wasm");
 const { Hasher } = require("@wasmer/sha2-wasm/src/bindings/sha2/sha2.js");
 
 function buf2hex(buffer) {
-  // buffer is an ArrayBuffer
   return [...new Uint8Array(buffer)]
     .map((x) => x.toString(16).padStart(2, "0"))
     .join("");

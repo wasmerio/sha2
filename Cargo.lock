@@ -1395,11 +1395,8 @@ name = "sha2-wasm"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "flate2",
  "hex-literal",
  "sha2",
- "tar",
- "tempfile",
  "tracing-subscriber",
  "wai-bindgen-rust",
  "wasmer-pack-testing",
