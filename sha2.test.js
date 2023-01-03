@@ -1,4 +1,3 @@
-// const { bindings } = require("@wasmer/sha2-wasm");
 const { bindings } = require("@wasmer/sha2-wasm");
 const { Hasher } = require("@wasmer/sha2-wasm/src/bindings/sha2/sha2.js");
 
