@@ -1,0 +1,40 @@
+name: Releases
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  publish-to-wapm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install WebAssembly targets
+        run: rustup target add wasm32-unknown-unknown
+      - name: Setup Wasmer
+        uses: wasmerio/setup-wasmer@v1
+      - name: Install cargo-wapm
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-wapm --verbose --debug
+
+      - name: Login to wapm.dev
+        run: |
+          wapm config set registry.url https://registry.wapm.dev
+          wapm login ${{ secrets.WAPM_DEV_TOKEN }}
+      - name: Publish to wapm.dev
+        run: cargo wapm
+        continue-on-error: ${{ github.event_name == 'workflow_dispatch' }}
+
+      - name: Login to wapm.io
+        run: |
+          wapm config set registry.url https://registry.wapm.io
+          wapm login ${{ secrets.WAPM_PROD_TOKEN }}
+      - name: Publish to wapm.io
+        run: cargo wapm
+        continue-on-error: ${{ github.event_name == 'workflow_dispatch' }}

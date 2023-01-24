@@ -1,3 +1,4 @@
 target/
 
 commands.txt
+__pycache__/

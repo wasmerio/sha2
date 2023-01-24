@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 use wai_bindgen_rust::Handle;
 
-use ::sha2::{Digest, Sha256, Sha512};
+use original::{Digest, Sha256, Sha512};
 
 wai_bindgen_rust::export!("sha2.wai");
 
@@ -70,32 +70,28 @@ mod tests {
     #[test]
     fn sha256_string_as_bytes() {
         let sample_string = "hello world";
+
         let result = Sha2::sha256(sample_string.as_bytes().to_vec());
+
         assert_eq!(
             result,
-            hex!(
-                "
-            b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
-        "
-            ),
-            "The SHA256 hash did not match the sample string {:?}",
-            sample_string
+            hex!("b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"),
+            "The SHA256 hash did not match the sample string {sample_string:?}",
         );
     }
     #[test]
     fn sha512_string_as_bytes() {
         let sample_string = "hello world";
+
         let result = Sha2::sha512(sample_string.as_bytes().to_vec());
+
         assert_eq!(
             result,
             hex!(
-                "
-                309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f
-                989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f
-        "
+                "309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f"
+                "989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f"
             ),
-            "The SHA512 hash did not match the sample string {:?}",
-            sample_string
+            "The SHA512 hash did not match the sample string {sample_string:?}",
         );
     }
 
@@ -110,11 +106,7 @@ mod tests {
 
         assert_eq!(
             result,
-            hex!(
-                "
-            b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
-        "
-            ),
+            hex!("b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"),
             "The SHA256 hash did not match the sample string, hello world",
         );
     }
@@ -131,10 +123,8 @@ mod tests {
         assert_eq!(
             result,
             hex!(
-                "
-                309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f
-                989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f
-        "
+                "309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f"
+                "989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f"
             ),
             "The SHA512 hash did not match the sample string, hello world",
         );
