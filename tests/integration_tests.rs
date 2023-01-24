@@ -61,7 +61,7 @@ fn compile_webc_container() {
             "run",
             "wasmer-pack",
             "--mapdir",
-            format!(".:{}", temp_dir.path().display()).as_str(),
+            format!(".::{}", temp_dir.path().display()).as_str(),
             "--",
             "python",
             "sha2.webc",
