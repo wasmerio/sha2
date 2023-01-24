@@ -22,12 +22,12 @@ fn compile_webc_container() {
     let temp_dir = tempdir().unwrap();
 
     let project_dir_path = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let wapm_dir = project_dir_path.join("target/wapm/sha2-wasm");
+    let wapm_dir = project_dir_path.join("target/wapm/sha2");
 
     assert!(wapm_dir.exists(), "wapm dir for sha2 not found");
 
     // Create tar.gz
-    let tar_gz = File::create(temp_dir.path().join("sha2_wasm.tar.gz")).unwrap();
+    let tar_gz = File::create(temp_dir.path().join("sha2.tar.gz")).unwrap();
     let enc = GzEncoder::new(tar_gz, Compression::default());
     let mut tar = tar::Builder::new(enc);
     tar.append_dir_all(".", &wapm_dir).unwrap();
@@ -47,8 +47,8 @@ fn compile_webc_container() {
             "--",
             "convert",
         ])
-        .arg("sha2_wasm.tar.gz")
-        .arg("sha2_wasm.webc")
+        .arg("sha2.tar.gz")
+        .arg("sha2.webc")
         .output()
         .expect("wapm2pirita command failed to execute");
 
@@ -61,12 +61,12 @@ fn compile_webc_container() {
             "run",
             "wasmer-pack",
             "--mapdir",
-            format!("f::{}", temp_dir.path().display()).as_str(),
+            format!(".:{}", temp_dir.path().display()).as_str(),
             "--",
             "python",
-            "f/sha2_wasm.webc",
+            "sha2.webc",
             "--out-dir",
-            "f/python_sha2",
+            "python_sha2",
         ])
         .output()
         .expect("wasmer-pack failed to create python binding");

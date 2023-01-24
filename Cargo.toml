@@ -1,5 +1,5 @@
 [package]
-name = "sha2-wasm"
+name = "sha2"
 description = "Sha2 for wasm, published on WAPM"
 version = "0.1.0"
 authors = ["Wasmer Engineering Team <engineering@wasmer.io>"]
@@ -8,7 +8,7 @@ homepage = "https://wasmer.io/"
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.62.1"
-
+publish = false
 
 [package.metadata.wapm]
 namespace = "wasmer"
@@ -18,7 +18,7 @@ bindings = { wai-version = "0.2.0", exports = "sha2.wai" }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-sha2 = "0.10.6"
+original = { package = "sha2", version = "0.10.6" }
 wai-bindgen-rust = "0.2.0"
 
 [dev-dependencies]
